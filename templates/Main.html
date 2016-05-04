@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<a href="/newpost">Post a Message Blog</a>
+	<br>
+	<br>
+	{% if entries %}
+		{% for entry in entries %}
+			<div>
+				<h2>{{entry.subject}}</h2>
+			</div>
+			<hr>
+			<div>
+				<pre>{{entry.content}}</pre>
+			</div>
+		{% endfor %}
+	{% endif %}
+{% endblock %}

@@ -1,0 +1,22 @@
+<!DOCTYPE=html>
+<html>
+<head>
+	<title>Khalil Ammour Blog</title>
+</head>
+<body>
+	<h1>Welcome to Khalil Ammour Blog</h1>
+	<a href="/newpost">Post a Message Blog</a>
+	<hr>
+	{% if entries %}
+		{% for entry in entries %}
+			<div>
+				<h2>{{entry.subject}}</h2>
+			</div>
+			<hr>
+			<div>
+				<pre>{{entry.content}}</pre>
+			</div>
+		{% endfor %}
+	{% endif %}
+</body>
+</html>
