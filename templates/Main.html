@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+	<br>
 	<a href="/newpost">Post a Message Blog</a>
+	<br>
+	<a href="/registration">Sign in or Sign up here</a>
 	<br>
 	<br>
 	{% if entries %}
@@ -14,5 +17,8 @@
 				<pre>{{entry.content}}</pre>
 			</div>
 		{% endfor %}
-	{% endif %}
+	{% endif %}				
+	<div>
+		You have been visiting our blog for {{visits}} times
+	</div>
 {% endblock %}
