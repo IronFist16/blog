@@ -6,6 +6,8 @@ import hashlib
 import hmac
 import string
 import random
+import re
+import logging
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
@@ -114,12 +116,60 @@ class PostID(Handler):
 						content=entry.content)
 
 class Registration(Handler):
+
+	attrb = ['username','password', 'verify', 'email']
+
+	data = dict.fromkeys(attrb, ['',''])
+
 	def render_register(self, username='', password='', verify='', email=''):
 		self.render('registration.html', username=username, password=password,
 					verify=verify, email=email)
 
-	def get(self):
-		self.render_register()
+	def get(self, d=data):
+		logging.info(d)
+		#d={'password': [u'khilo2', ''], 'email': [u'khilo2007@hotmail.com', ''], 'verify': [u'khilo2', ''], 'username': [u'IronFist16', '']}
+		self.render_register(**d)
+
+	def post(self, d=data):
+		logging.info(d)
+		#d={'password': [u'khilo2', ''], 'email': [u'khilo2007@hotmail.com', ''], 'verify': [u'khilo2', ''], 'username': [u'IronFist16', '']}
+		self.render_register(**self.validate_data(d))
+
+	def validate_data(self, d):
+		pat_user = re.compile(r'^[a-zA-Z0-9_-]{3,20}$')
+		pat_pass = re.compile(r'^.{3,20}$')
+		pat_email = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
+		
+		for k in d:
+			value = self.request.get(k)
+			logging.info('K: VALUE = %s : %s' % (k,value))
+
+			if k=='username':
+				logging.info('Setting User name')
+				if not pat_user.match(value):
+					d[k][1] = 'Invalid User name'
+
+			elif k=='password':
+				logging.info('Setting Password')
+				if not pat_pass.match(value):
+					d[k][1] = 'Invalid password'
+
+			elif k=='verify':
+				logging.info('Verify Password')
+				if value != d['password'][0]:
+					d[k][1] = 'Password not matching'
+
+			elif k=='email':
+				logging.info('Setting Email')
+				if not pat_email.match(value):
+					d[k][1] = 'Invalid Email address'
+
+			d[k][0] = value
+
+		logging.info('VALIDATE DATA'+str(d))
+
+		return d
+
 
 
 
